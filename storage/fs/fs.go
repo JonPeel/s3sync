@@ -251,7 +251,6 @@ func (st *FSStorage) GetObjectMeta(obj *storage.Object) error {
 }
 
 func (st *FSStorage) GetObjectLocalMeta(obj *storage.Object) error {
-    return nil;
     destPath := filepath.Join(st.dir, *obj.Key)
     f, err := os.Open(destPath)
     if err != nil {

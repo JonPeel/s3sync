@@ -1,6 +1,6 @@
 # S3Sync
 #### Really fast sync tool for S3
-[![Go Report Card](https://goreportcard.com/badge/github.com/larrabee/s3sync)](https://goreportcard.com/report/github.com/larrabee/s3sync) [![GoDoc](https://godoc.org/github.com/larrabee/s3sync?status.svg)](https://godoc.org/github.com/larrabee/s3sync) [![Build Status](https://travis-ci.org/larrabee/s3sync.svg?branch=master)](https://travis-ci.org/larrabee/s3sync)  
+[![Go Report Card](https://goreportcard.com/badge/github.com/JonPeel/s3sync)](https://goreportcard.com/report/github.com/JonPeel/s3sync) [![GoDoc](https://godoc.org/github.com/JonPeel/s3sync?status.svg)](https://godoc.org/github.com/JonPeel/s3sync) [![Build Status](https://travis-ci.org/JonPeel/s3sync.svg?branch=master)](https://travis-ci.org/JonPeel/s3sync)  
 
 ## Features
 * Multi-threaded file downloading/uploading
@@ -113,10 +113,10 @@ You can use filters.
 * There are also inverted filters (`--filter-not-ext`, `--filter-not-ct` and `--filter-before-mtime`).
 
 ## Install
-Download binary from [Release page](https://github.com/larrabee/s3sync/releases).  
-Or use docker image [larrabee/s3sync](https://hub.docker.com/repository/docker/larrabee/s3sync) like this:  
+Download binary from [Release page](https://github.com/JonPeel/s3sync/releases).  
+Or use docker image [JonPeel/s3sync](https://hub.docker.com/repository/docker/JonPeel/s3sync) like this:  
 ```
-docker run --rm -ti larrabee/s3sync --tk KEY2 --ts SECRET2 --sk KEY1 --ss SECRET1 -w 128 s3://shared/test/ s3://shared_new
+docker run --rm -ti JonPeel/s3sync --tk KEY2 --ts SECRET2 --sk KEY1 --ss SECRET1 -w 128 s3://shared/test/ s3://shared_new
 ```
 
 ## Building

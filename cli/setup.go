@@ -3,18 +3,18 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/larrabee/s3sync/pipeline"
-	"github.com/larrabee/s3sync/pipeline/collection"
-	"github.com/larrabee/s3sync/storage"
-	"github.com/larrabee/s3sync/storage/fs"
-	"github.com/larrabee/s3sync/storage/s3"
+	"github.com/JonPeel/s3sync/pipeline"
+	"github.com/JonPeel/s3sync/pipeline/collection"
+	"github.com/JonPeel/s3sync/storage"
+	"github.com/JonPeel/s3sync/storage/fs"
+	"github.com/JonPeel/s3sync/storage/s3"
 )
 
 func setupStorages(ctx context.Context, syncGroup *pipeline.Group, cli *argsParsed) error {
 	var sourceStorage, targetStorage storage.Storage
 	switch cli.Source.Type {
 	case storage.TypeS3:
-		sourceStorage = s3.NewS3Storage(cli.SourceKey, cli.SourceSecret, cli.SourceRegion, cli.SourceEndpoint,
+		sourceStorage = s3.NewS3Storage(cli.SourceKey, cli.SourceSecret, cli.SourceSession, cli.SourceRegion, cli.SourceEndpoint,
 			cli.Source.Bucket, cli.Source.Path, cli.S3KeysPerReq, cli.S3Retry, cli.S3RetryInterval,
 		)
 	case storage.TypeFS:
@@ -23,7 +23,7 @@ func setupStorages(ctx context.Context, syncGroup *pipeline.Group, cli *argsPars
 
 	switch cli.Target.Type {
 	case storage.TypeS3:
-		targetStorage = s3.NewS3Storage(cli.TargetKey, cli.TargetSecret, cli.TargetRegion, cli.TargetEndpoint,
+		targetStorage = s3.NewS3Storage(cli.TargetKey, cli.TargetSecret, cli.TargetSession, cli.TargetRegion, cli.TargetSession, cli.TargetEndpoint,
 			cli.Target.Bucket, cli.Target.Path, cli.S3KeysPerReq, cli.S3Retry, cli.S3RetryInterval,
 		)
 	case storage.TypeFS:
@@ -52,15 +52,15 @@ func setupStorages(ctx context.Context, syncGroup *pipeline.Group, cli *argsPars
 
 func setupPipeline(syncGroup *pipeline.Group, cli *argsParsed) {
 	syncGroup.AddPipeStep(pipeline.Step{
-		Name:     "ListSource",
-		Fn:       collection.ListSourceStorage,
+		Name:	 "ListSource",
+		Fn:	   collection.ListSourceStorage,
 		ChanSize: cli.ListBuffer,
 	})
 
 	if len(cli.FilterExt) > 0 {
 		syncGroup.AddPipeStep(pipeline.Step{
 			Name:   "FilterObjByExt",
-			Fn:     collection.FilterObjectsByExt,
+			Fn:	 collection.FilterObjectsByExt,
 			Config: cli.FilterExt,
 		})
 	}
@@ -68,14 +68,14 @@ func setupPipeline(syncGroup *pipeline.Group, cli *argsParsed) {
 	if len(cli.FilterExtNot) > 0 {
 		syncGroup.AddPipeStep(pipeline.Step{
 			Name:   "FilterObjByExtNot",
-			Fn:     collection.FilterObjectsByExtNot,
+			Fn:	 collection.FilterObjectsByExtNot,
 			Config: cli.FilterExtNot,
 		})
 	}
 
 	loadObjMetaStep := pipeline.Step{
-		Name:       "LoadObjMeta",
-		Fn:         collection.LoadObjectMeta,
+		Name:	   "LoadObjMeta",
+		Fn:		 collection.LoadObjectMeta,
 		AddWorkers: cli.Workers,
 	}
 	if (cli.Source.Type == storage.TypeFS) && ((cli.FilterMtimeAfter > 0) || (cli.FilterMtimeBefore > 0) || cli.FilterModified) {
@@ -87,7 +87,7 @@ func setupPipeline(syncGroup *pipeline.Group, cli *argsParsed) {
 	if cli.FilterMtimeAfter > 0 {
 		syncGroup.AddPipeStep(pipeline.Step{
 			Name:   "FilterObjectsByMtimeAfter",
-			Fn:     collection.FilterObjectsByMtimeAfter,
+			Fn:	 collection.FilterObjectsByMtimeAfter,
 			Config: cli.FilterMtimeAfter,
 		})
 	}
@@ -95,7 +95,7 @@ func setupPipeline(syncGroup *pipeline.Group, cli *argsParsed) {
 	if cli.FilterMtimeBefore > 0 {
 		syncGroup.AddPipeStep(pipeline.Step{
 			Name:   "FilterObjectsByMtimeBefore",
-			Fn:     collection.FilterObjectsByMtimeBefore,
+			Fn:	 collection.FilterObjectsByMtimeBefore,
 			Config: cli.FilterMtimeBefore,
 		})
 	}
@@ -103,7 +103,7 @@ func setupPipeline(syncGroup *pipeline.Group, cli *argsParsed) {
 	if len(cli.FilterCT) > 0 {
 		syncGroup.AddPipeStep(pipeline.Step{
 			Name:   "FilterObjByCT",
-			Fn:     collection.FilterObjectsByCT,
+			Fn:	 collection.FilterObjectsByCT,
 			Config: cli.FilterCT,
 		})
 	}
@@ -111,7 +111,7 @@ func setupPipeline(syncGroup *pipeline.Group, cli *argsParsed) {
 	if len(cli.FilterCTNot) > 0 {
 		syncGroup.AddPipeStep(pipeline.Step{
 			Name:   "FilterObjByCTNot",
-			Fn:     collection.FilterObjectsByCTNot,
+			Fn:	 collection.FilterObjectsByCTNot,
 			Config: cli.FilterCTNot,
 		})
 	}
@@ -124,15 +124,15 @@ func setupPipeline(syncGroup *pipeline.Group, cli *argsParsed) {
 	}
 
 	syncGroup.AddPipeStep(pipeline.Step{
-		Name:       "LoadObjData",
-		Fn:         collection.LoadObjectData,
+		Name:	   "LoadObjData",
+		Fn:		 collection.LoadObjectData,
 		AddWorkers: cli.Workers,
 	})
 
 	if cli.S3Acl != "" {
 		syncGroup.AddPipeStep(pipeline.Step{
 			Name:   "ACLUpdater",
-			Fn:     collection.ACLUpdater,
+			Fn:	 collection.ACLUpdater,
 			Config: cli.S3Acl,
 		})
 	}
@@ -140,21 +140,21 @@ func setupPipeline(syncGroup *pipeline.Group, cli *argsParsed) {
 	if cli.S3StorageClass != "" {
 		syncGroup.AddPipeStep(pipeline.Step{
 			Name:   "StorageClassUpdater",
-			Fn:     collection.StorageClassUpdater,
+			Fn:	 collection.StorageClassUpdater,
 			Config: cli.S3StorageClass,
 		})
 	}
 
 	syncGroup.AddPipeStep(pipeline.Step{
-		Name:       "UploadObj",
-		Fn:         collection.UploadObjectData,
+		Name:	   "UploadObj",
+		Fn:		 collection.UploadObjectData,
 		AddWorkers: cli.Workers,
 	})
 
 	if cli.SyncLog {
 		syncGroup.AddPipeStep(pipeline.Step{
 			Name:   "Logger",
-			Fn:     collection.Logger,
+			Fn:	 collection.Logger,
 			Config: log,
 		})
 	}
@@ -162,7 +162,7 @@ func setupPipeline(syncGroup *pipeline.Group, cli *argsParsed) {
 	if cli.RateLimitObjPerSec > 0 {
 		syncGroup.AddPipeStep(pipeline.Step{
 			Name:   "RateLimit",
-			Fn:     collection.PipelineRateLimit,
+			Fn:	 collection.PipelineRateLimit,
 			Config: cli.RateLimitObjPerSec,
 		})
 	}

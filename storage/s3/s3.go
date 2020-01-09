@@ -9,8 +9,8 @@ import (
 	"github.com/aws/aws-sdk-go/aws/ec2metadata"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/larrabee/ratelimit"
-	"github.com/larrabee/s3sync/storage"
+	"github.com/JonPeel/ratelimit"
+	"github.com/JonPeel/s3sync/storage"
 	"io"
 	"net/url"
 	"strings"
@@ -34,7 +34,7 @@ type S3Storage struct {
 // NewS3Storage return new configured S3 storage.
 //
 // You should always create new storage with this constructor.
-func NewS3Storage(awsAccessKey, awsSecretKey, awsRegion, endpoint, bucketName, prefix string, keysPerReq int64, retryCnt uint, retryInterval time.Duration) *S3Storage {
+func NewS3Storage(awsAccessKey, awsSecretKey, awsSessionToken, awsRegion, endpoint, bucketName, prefix string, keysPerReq int64, retryCnt uint, retryInterval time.Duration) *S3Storage {
 	sess := session.Must(session.NewSession())
 
 	sess.Config.S3ForcePathStyle = aws.Bool(true)
@@ -42,7 +42,7 @@ func NewS3Storage(awsAccessKey, awsSecretKey, awsRegion, endpoint, bucketName, p
 	sess.Config.Region = aws.String(awsRegion)
 
 	if awsAccessKey != "" && awsSecretKey != "" {
-		cred := credentials.NewStaticCredentials(awsAccessKey, awsSecretKey, "")
+		cred := credentials.NewStaticCredentials(awsAccessKey, awsSecretKey, awsSessionToken)
 		sess.Config.WithCredentials(cred)
 	} else {
 		cred := credentials.NewChainCredentials(

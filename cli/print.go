@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/larrabee/s3sync/pipeline"
+	"github.com/JonPeel/s3sync/pipeline"
 	"time"
 )
 

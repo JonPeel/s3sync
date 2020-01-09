@@ -1,7 +1,7 @@
 package pipeline
 
 import (
-	"github.com/larrabee/s3sync/storage"
+	"github.com/JonPeel/s3sync/storage"
 	"sync"
 )
 

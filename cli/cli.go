@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/alexflint/go-arg"
-	"github.com/larrabee/s3sync/storage"
+	"github.com/JonPeel/s3sync/storage"
 	"github.com/mattn/go-isatty"
 	"net/url"
 	"os"
@@ -51,12 +51,14 @@ type args struct {
 	Source         string `arg:"positional"`
 	SourceKey      string `arg:"--sk" help:"Source AWS key"`
 	SourceSecret   string `arg:"--ss" help:"Source AWS secret"`
+	SourceSession  string `arg:"--sn" help:"Source AWS session"`
 	SourceRegion   string `arg:"--sr" help:"Source AWS Region"`
 	SourceEndpoint string `arg:"--se" help:"Source AWS Endpoint"`
 	// Target config
 	Target         string `arg:"positional"`
 	TargetKey      string `arg:"--tk" help:"Target AWS key"`
 	TargetSecret   string `arg:"--ts" help:"Target AWS secret"`
+	TargetSession  string `arg:"--tn" help:"Target AWS session"`
 	TargetRegion   string `arg:"--tr" help:"Target AWS Region"`
 	TargetEndpoint string `arg:"--te" help:"Target AWS Endpoint"`
 	// S3 config

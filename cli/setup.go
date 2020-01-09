@@ -23,7 +23,7 @@ func setupStorages(ctx context.Context, syncGroup *pipeline.Group, cli *argsPars
 
 	switch cli.Target.Type {
 	case storage.TypeS3:
-		targetStorage = s3.NewS3Storage(cli.TargetKey, cli.TargetSecret, cli.TargetSession, cli.TargetRegion, cli.TargetSession, cli.TargetEndpoint,
+		targetStorage = s3.NewS3Storage(cli.TargetKey, cli.TargetSecret, cli.TargetSession, cli.TargetRegion, cli.TargetEndpoint,
 			cli.Target.Bucket, cli.Target.Path, cli.S3KeysPerReq, cli.S3Retry, cli.S3RetryInterval,
 		)
 	case storage.TypeFS:

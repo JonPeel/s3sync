@@ -1,6 +1,7 @@
 package collection
 
 import (
+    "strconv"
 	"github.com/JonPeel/s3sync/pipeline"
 	"github.com/JonPeel/s3sync/storage"
 	"path/filepath"
@@ -160,6 +161,10 @@ var FilterObjectsModified pipeline.StepFn = func(group *pipeline.Group, stepNum 
 			VersionId: obj.VersionId,
 		}
 		err := group.Target.GetObjectMeta(destObj)
+
+        storage.Log.Warnf(strconv.FormatBool(obj.ETag == nil));
+        storage.Log.Warnf(*destObj.ETag);
+
 		if (err != nil) || (obj.ETag == nil || destObj.ETag == nil) || (*obj.ETag != *destObj.ETag) {
 			output <- obj
 		}

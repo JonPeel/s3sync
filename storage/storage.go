@@ -46,6 +46,7 @@ type Storage interface {
 	PutObject(object *Object) error
 	GetObjectContent(obj *Object) error
 	GetObjectMeta(obj *Object) error
+	GetObjectLocalMeta(obj *Object) error
 	DeleteObject(obj *Object) error
 	GetStorageType() Type
 }

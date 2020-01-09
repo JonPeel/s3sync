@@ -149,16 +149,12 @@ func (st *FSStorage) GetObjectContent(obj *storage.Object) error {
     if err != nil {
         return err
     }
+    defer f.Close()
 
     fileInfo, err := f.Stat()
     if err != nil {
         return err
     }
-
-    //Tell the program to call the following function when the current function returns
-    defer f.Close()
-
-    // Reset file
 
     buf := bytes.NewBuffer(make([]byte, 0, fileInfo.Size()))
     if _, err := io.Copy(buf, ratelimit.NewReader(f, st.rlBucket)); err != nil {

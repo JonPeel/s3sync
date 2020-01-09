@@ -13,6 +13,7 @@ import (
     "io"
     "mime"
     "os"
+    "fmt"
     "path/filepath"
     "strings"
 )
@@ -96,11 +97,18 @@ func (st *FSStorage) List(output chan<- *storage.Object) error {
         }
     }
 
+
+    skipErrorsFn := func(osPathname string, err error) godirwalk.ErrorAction {
+       fmt.Fprintf(os.Stderr, "Cannot sync: %s: %s\n", osPathname, err)
+       return godirwalk.SkipNode
+    }
+
     err := godirwalk.Walk(st.dir, &godirwalk.Options{
         FollowSymbolicLinks: true,
         Unsorted:            true,
         ScratchBuffer:       make([]byte, st.bufSize),
         Callback:            listObjectsFn,
+        ErrorCallback:       skipErrorsFn,
     })
     if err != nil {
         return err

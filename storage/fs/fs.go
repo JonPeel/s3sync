@@ -261,7 +261,12 @@ func (st *FSStorage) GetObjectMeta(obj *storage.Object) error {
     hashInBytes := hash.Sum(nil)[:16]
 
     //Convert the bytes to a string
-    var md5String string = hex.EncodeToString(hashInBytes);
+
+    var b bytes.Buffer;
+    b.WriteString("\"");
+    b.WriteString(hex.EncodeToString(hashInBytes));
+    b.WriteString("\"");
+    var md5String string = b.String();
     obj.ETag = &md5String;
     // MD5 CALC END
 

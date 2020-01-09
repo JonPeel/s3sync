@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/karrick/godirwalk"
-	"github.com/JonPeel/ratelimit"
+	"github.com/larrabee/ratelimit"
 	"github.com/JonPeel/s3sync/storage"
 	"github.com/pkg/xattr"
 	"io"

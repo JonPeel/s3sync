@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/ec2metadata"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/JonPeel/ratelimit"
+	"github.com/larrabee/ratelimit"
 	"github.com/JonPeel/s3sync/storage"
 	"io"
 	"net/url"

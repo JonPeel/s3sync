@@ -1,7 +1,7 @@
 package collection
 
 import (
-	"github.com/JonPeel/ratelimit"
+	"github.com/larrabee/ratelimit"
 	"github.com/JonPeel/s3sync/pipeline"
 	"github.com/JonPeel/s3sync/storage"
 	"github.com/sirupsen/logrus"

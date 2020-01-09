@@ -78,6 +78,7 @@ type args struct {
 	FilterCTNot       []string `arg:"--filter-not-ct,separate" help:"Skip files with given Content-Type"`
 	FilterMtimeAfter  int64    `arg:"--filter-after-mtime" help:"Sync only files modified after given unix timestamp"`
 	FilterMtimeBefore int64    `arg:"--filter-before-mtime" help:"Sync only files modified before given unix timestamp"`
+	FilterMtimeModified bool `arg:"--filter-mtime-modified" help:"Sync only files with modified unix timestamp"`
 	FilterModified    bool     `arg:"--filter-modified" help:"Sync only modified files"`
 	// Misc
 	Workers      uint   `arg:"-w" help:"Workers count"`

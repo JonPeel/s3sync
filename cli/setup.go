@@ -78,7 +78,7 @@ func setupPipeline(syncGroup *pipeline.Group, cli *argsParsed) {
         Fn:         collection.LoadObjectMeta,
         AddWorkers: cli.Workers,
     }
-    if (cli.Source.Type == storage.TypeFS) && ((cli.FilterMtimeAfter > 0) || (cli.FilterMtimeBefore > 0) || cli.FilterModified) {
+    if (cli.Source.Type == storage.TypeFS) && ((cli.FilterMtimeAfter > 0) || (cli.FilterMtimeBefore > 0) || cli.FilterModified || cli.FilterMtimeModified ) {
         syncGroup.AddPipeStep(loadObjMetaStep)
     } else if (len(cli.FilterCT) > 0) || (len(cli.FilterCTNot) > 0) {
         syncGroup.AddPipeStep(loadObjMetaStep)
@@ -97,6 +97,13 @@ func setupPipeline(syncGroup *pipeline.Group, cli *argsParsed) {
             Name:   "FilterObjectsByMtimeBefore",
             Fn:     collection.FilterObjectsByMtimeBefore,
             Config: cli.FilterMtimeBefore,
+        })
+    }
+
+    if cli.FilterMtimeModified {
+        syncGroup.AddPipeStep(pipeline.Step{
+            Name:   "FilterObjectsByMtimeModified",
+            Fn:     collection.FilterObjectsByMtimeModified,
         })
     }
 

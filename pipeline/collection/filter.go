@@ -150,6 +150,19 @@ var FilterObjectsByMtimeBefore pipeline.StepFn = func(group *pipeline.Group, ste
 	}
 }
 
+var FilterObjectsByMtimeModified pipeline.StepFn = func(group *pipeline.Group, stepNum int, input <-chan *storage.Object, output chan<- *storage.Object, errChan chan<- error) {
+	for obj := range input {
+		destObj := &storage.Object{
+			Key:       obj.Key,
+			VersionId: obj.VersionId,
+		}
+		err := group.Target.GetObjectMeta(destObj)
+		if (err != nil) || (obj.Mtime == nil || destObj.Mtime == nil) || (obj.Mtime.Unix() > destObj.Mtime.Unix()) {
+			output <- obj
+		}
+	}
+}
+
 // FilterObjectsModified accepts an input object and checks if it matches the filter
 // This filter gets object meta from target storage and compare object ETags. If Etags are equal object will be skipped
 // For FS storage xattr support are required for proper work.

@@ -158,23 +158,8 @@ func (st *FSStorage) GetObjectContent(obj *storage.Object) error {
     //Tell the program to call the following function when the current function returns
     defer f.Close()
 
-    // MD5 CALC START
-    //Open a new hash interface to write to
-    hash := md5.New()
-    //Copy the file in the hash interface and check for any error
-    if _, err := io.Copy(hash, f); err != nil {
-        return err
-    }
-    //Get the 16 bytes hash
-    hashInBytes := hash.Sum(nil)[:16]
-
-    //Convert the bytes to a string
-    var md5String string = hex.EncodeToString(hashInBytes);
-    obj.ETag = &md5String;
-    // MD5 CALC END
-
     // Reset file
-    f.Seek(0, 0);
+
     buf := bytes.NewBuffer(make([]byte, 0, fileInfo.Size()))
     if _, err := io.Copy(buf, ratelimit.NewReader(f, st.rlBucket)); err != nil {
         return err
@@ -262,6 +247,23 @@ func (st *FSStorage) GetObjectMeta(obj *storage.Object) error {
         obj.ContentType = &contentType
         obj.Mtime = &Mtime
     }
+
+
+    // MD5 CALC START
+    //Open a new hash interface to write to
+    hash := md5.New()
+    f.Seek(0, 0);
+    //Copy the file in the hash interface and check for any error
+    if _, err := io.Copy(hash, f); err != nil {
+        return err
+    }
+    //Get the 16 bytes hash
+    hashInBytes := hash.Sum(nil)[:16]
+
+    //Convert the bytes to a string
+    var md5String string = hex.EncodeToString(hashInBytes);
+    obj.ETag = &md5String;
+    // MD5 CALC END
 
     return nil
 }

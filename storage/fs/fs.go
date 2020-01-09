@@ -247,12 +247,20 @@ func (st *FSStorage) GetObjectMeta(obj *storage.Object) error {
         obj.ContentType = &contentType
         obj.Mtime = &Mtime
     }
+    return nil
+}
 
+func (st *FSStorage) GetObjectLocalMeta(obj *storage.Object) error {
+    destPath := filepath.Join(st.dir, *obj.Key)
+    f, err := os.Open(destPath)
+    if err != nil {
+        return err
+    }
+    defer f.Close()
 
     // MD5 CALC START
     //Open a new hash interface to write to
     hash := md5.New()
-    f.Seek(0, 0);
     //Copy the file in the hash interface and check for any error
     if _, err := io.Copy(hash, f); err != nil {
         return err

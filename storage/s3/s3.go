@@ -208,6 +208,11 @@ func (st *S3Storage) GetObjectContent(obj *storage.Object) error {
 }
 
 // GetObjectMeta update object metadata from S3.
+func (st *S3Storage) GetObjectLocalMeta(obj *storage.Object) error {
+    return nil;
+}
+
+// GetObjectMeta update object metadata from S3.
 func (st *S3Storage) GetObjectMeta(obj *storage.Object) error {
 	input := &s3.HeadObjectInput{
 		Bucket: st.awsBucket,

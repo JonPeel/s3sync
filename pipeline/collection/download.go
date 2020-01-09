@@ -18,6 +18,19 @@ var LoadObjectMeta pipeline.StepFn = func(group *pipeline.Group, stepNum int, in
 	}
 }
 
+
+// LoadObjectMeta accepts an input object and downloads its metadata.
+var LoadObjectLocalMeta pipeline.StepFn = func(group *pipeline.Group, stepNum int, input <-chan *storage.Object, output chan<- *storage.Object, errChan chan<- error) {
+	for obj := range input {
+		err := group.Source.GetObjectLocalMeta(obj)
+		if err != nil {
+			errChan <- &pipeline.ObjectError{Object: obj, Err: err}
+		} else {
+			output <- obj
+		}
+	}
+}
+
 // LoadObjectData accepts an input object and downloads its content and metadata.
 var LoadObjectData pipeline.StepFn = func(group *pipeline.Group, stepNum int, input <-chan *storage.Object, output chan<- *storage.Object, errChan chan<- error) {
 	for obj := range input {

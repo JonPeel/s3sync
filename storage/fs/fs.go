@@ -3,6 +3,7 @@ package fs
 import (
     "bytes"
     "context"
+    "errors"
     "encoding/json"
     "crypto/md5"
     "encoding/hex"
@@ -162,6 +163,10 @@ func (st *FSStorage) GetObjectContent(obj *storage.Object) error {
     fileInfo, err := f.Stat()
     if err != nil {
         return err
+    }
+
+    if fileInfo.Size() > 5368709120 {
+        return errors.New("File is in excess of 5G");
     }
 
     buf := bytes.NewBuffer(make([]byte, 0, fileInfo.Size()))
